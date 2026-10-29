@@ -20,7 +20,7 @@ PUBLIC_FILES = [
     'scripts/check_connection.py', 'scripts/configure.py', 'scripts/package_release.py',
     'scripts/check_release.py', 'Install.command', 'Run.command', 'scripts/configure_macos.py',
     'scripts/confirm_macos_candidate.py', 'docs/MACOS.md', 'docs/MAC_VALIDATION.md',
-    'docs/SKILL.md', 'docs/RELEASE_0.3.0a1.md', 'docs/RELEASE_0.3.0a2.md',
+    'docs/SKILL.md', 'docs/RELEASE_0.3.0a1.md', 'docs/RELEASE_0.3.0a2.md', 'docs/RELEASE_0.3.0a3.md',
     'skills/capture-one-edit/SKILL.md', 'skills/capture-one-edit/agents/openai.yaml',
     'skills/capture-one-edit/references/usage.md',
     'skills/capture-one-edit/references/photographic-workflow.md',

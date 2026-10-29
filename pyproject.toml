@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "capture-one-ai-macos"
-version = "0.3.0a2"
+version = "0.3.0a3"
 description = "Native Capture One editing on macOS via MCP and CLI"
 readme = "README.md"
 license = "MIT"

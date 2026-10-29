@@ -7,8 +7,8 @@
 ## 打包
 
 ```sh
-.venv/bin/python scripts/package_release.py --target macos --output dist/0.3.0a2
-.venv/bin/python scripts/package_release.py --target skill --output dist/0.3.0a2
+.venv/bin/python scripts/package_release.py --target macos --output dist/0.3.0a3
+.venv/bin/python scripts/package_release.py --target skill --output dist/0.3.0a3
 ```
 
 使用明确公开文件清单，扫描私人路径、配置名、符号链接与检测到的凭据。Mac 包不附其他平台启动入口或厂商组件；skill 包只带技能及许可证。脚本拒绝覆盖同名 ZIP，历史发布不自动替换。

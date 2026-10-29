@@ -2,7 +2,7 @@
 
 让视觉 AI 在 Mac 上读取和调整 Capture One，通过本机 **MCP stdio / JSON CLI** 完成调色，并查看 Capture One 实际渲染的画面。
 
-**macOS 实验版 · Capture One 16.8.6.25 · Apple Silicon · Session**。当前版本为 0.3.0a2，依赖原生 Apple Events / JXA；其他宿主版本、Intel Mac、Catalog 和批量任务尚未完成兼容验证。项目非 Capture One 官方产品。
+**macOS 实验版 · Capture One 16.8.6.25 · Apple Silicon · Session**。当前版本为 0.3.0a3，依赖原生 Apple Events / JXA；其他宿主版本、Intel Mac、Catalog 和批量任务尚未完成兼容验证。项目非 Capture One 官方产品。
 
 [下载预发布](https://github.com/iscca/capture-one-ai-macos/releases) · [安装说明](docs/INSTALL.md) · [Skill 使用](docs/SKILL.md)
 
@@ -65,7 +65,7 @@ AI 根据分析结果选择有实际作用的参数：先处理整体明暗和�
 
 参考追色会受原片曝光、布光、相机色彩和材质影响，不能仅靠调色重建另一张照片的光线与内容，也不承诺每张照片都能完全一致。当前重点是单张照片的参考调色，批量处理暂不纳入。
 
-任务记录、版本比较和固定细节测量属于最新源码中的新增能力，已有发布包不会自动更新。参数恢复目前只覆盖快照所在层的调色参数，不包含完整图层和蒙版历史。
+本版本包含任务记录、版本比较和固定细节测量；更新旧版时，需要同时更新本机程序和配套 skill。参数恢复目前只覆盖快照所在层的调色参数，不包含完整图层和蒙版历史。
 
 [修图与版本流程](docs/EDITING_TASKS.md) · [参考目标与反馈](docs/P1_EDITING.md) · [灰度偏色与细节测量](docs/REFERENCE_MATCHING.md)
 
