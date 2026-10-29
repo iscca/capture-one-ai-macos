@@ -19,6 +19,10 @@ Stay within the user's selected Session and photo. Do not switch documents or st
 
 ## Grade from the image
 
+On Mac, read [references/photographic-workflow.md](references/photographic-workflow.md) for the photographic brief, reference matching, persistent checkpoints, feedback and restore flow. When `context.editing_tasks.features` includes `reference_plan`, also follow its P1 section to track reference traits, interpret targeted feedback, preserve partial user approvals and review gains/regressions. Use the task entry only when `context.editing_tasks.available` is true; older bridges retain the manual read/adjust/render loop. The bridge stores briefs and parameters; the vision client must actually inspect the reference and C1 images, and must not describe its own review as user acceptance.
+
+For detailed reference grading (gray casts, tone-dependent color, fixed-detail color mapping), read [references/detail-matching.md](references/detail-matching.md). Use explicit corresponding patches and `anchor_analysis` when available, preserve the reference's intentional neutral casts, and select C1 adjustments from measured differences plus visual judgment. Batch work is outside this phase.
+
 Describe the intended tonal/color result briefly, unless already agreed. Select modules because they solve visible problems; do not treat API maxima or a fixed recipe as recommendations. Save initial module observations privately for deliberate restoration.
 
 Use `read → adjust → readback → actual preview`. Patches contain absolute target values. Pass the fresh `target` and `observation_token` unchanged; every new mutation gets a unique `request_id`. Related writes to one module can share a visual review. After changing photos or layers, read again.

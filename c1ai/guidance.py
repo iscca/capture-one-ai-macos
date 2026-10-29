@@ -10,6 +10,7 @@ def workflow():
     return {
         'scope': '用户已经打开并选定的Session及照片集合；默认不切换文档、不导出。',
         'transport': '本机MCP stdio或JSON CLI；不绑定模型、账号或聊天。',
+        'photographic_task': 'Mac operations(action=task)：保存目标、保护项、参考角色/分析；以真实预览创建checkpoint，compare比较，feedback记录已认可部分。恢复只覆盖快照所在层的调色参数，之后重新预览。',
         'analysis_first': '先context、read(fields=[])、preview(kind=native)，实际看图后区分可见问题、用户风格要求和不确定判断。可使用客户端已有的照片分析技能；本接口不依赖某个专属技能。',
         'candidate': '确认照片身份；只编辑用户指定或已登记的候选副本，必要时create_candidate。保留原变体，避免重复创建副本。',
         'module_order': list(ORDER),
@@ -85,7 +86,7 @@ def read_guidance(request, observation):
 
 
 MCP_INSTRUCTIONS = (
-    'Capture One Windows: six client-neutral tools using one serialized local owner. '
+    'Capture One: six client-neutral tools using one serialized local owner. '
     'Call context for the shared editing workflow, target and capabilities; read returns module guidance/units. '
     'Inspect a native preview before choosing adjustments. Edit one necessary module at a time, '
     'using absolute values and fresh observations. Suggested order: '+', '.join(ORDER)+'. '
@@ -95,4 +96,16 @@ MCP_INSTRUCTIONS = (
     'Use an explicit unique request_id for each write so an uncertain result can be queried with operations; '
     'never repeat an uncertain write with a new ID. A client with vision/image-block support is required '
     'for visual editing decisions. Use native paths; do not silently fall back to UI/preset editing.'
+    ' On Mac use operations(action=task) for photographic briefs, reference roles, render-backed checkpoints, '
+    'feedback and comparisons. A checkpoint preserves selected-layer color parameters and a retained actual render; '
+    'it is not whole-image/mask undo. Client visual review and user acceptance are distinct declarations. '
+    'Preserve approved details; stop after two rounds without improvement and ask for direction.'
+    ' If context advertises reference_plan, save concrete reference traits with regions, priorities and limits; '
+    'interpret feedback into problem/region/direction/method/risks; record partial user approval with recognize. '
+    'Checkpoint intent freezes required target/protection/feedback IDs: review each with a status and note. '
+    'Changed protections or conflicting/worse outcomes require direction; uncertain protection requires verification. '
+    'These are client visual declarations, not pixel locks or automatic cross-version composites.'
+    ' For detailed reference grading, anchor_analysis measures ICC-managed rendered patches and tonal bands. '
+    'Preserve intentional gray casts, match semantic details, and reuse fixed preview patches after checking alignment. '
+    'Lab/sRGB deltas are descriptive evidence, never C1 kelvin/slider/Device RGB values. Batch work is deferred.'
 )

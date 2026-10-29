@@ -213,10 +213,74 @@ def _preview_content(result: dict[str, Any]) -> CallToolResult:
 
 
 @mcp.tool()
-def operations(action: Literal["get", "list", "reconcile"],
-               operation_id: str | None = None, request_id: str | None = None) -> dict[str, Any]:
-    """Read full logs or reconcile current evidence without dispatching recovery writes."""
-    return _call("operations", action=action, operation_id=operation_id, request_id=request_id)
+def operations(action: Literal["get", "list", "reconcile", "task"],
+               operation_id: str | None = None, request_id: str | None = None,
+               task_action: Literal['start', 'get', 'diagnose', 'bind', 'update', 'checkpoint',
+                                    'review', 'feedback', 'accept', 'restore', 'stop', 'compare',
+                                    'reference_plan', 'recognize', 'anchor_analysis'] | None = None,
+               task_id: str | None = None, payload: dict[str, Any] | None = None,
+               target: dict[str, Any] | None = None,
+               observation_token: str | None = None) -> dict[str, Any]:
+    """Get/list/reconcile existing receipts; reconcile never dispatches recovery writes.
+
+    action=task adds persistent photographic briefs and versions on Mac. Mutations require
+    a unique request_id and fresh target/token (stop only needs task_id). task_action:
+    start payload={goals:[...],protections:[...],mode:optimize|reference_match,strength:light|close|maximum,
+      references:[{id,role,kind:same_scene|cross_scene}],reference_analysis?:{tone,color,texture,limitations,priority}};
+    bind {candidate_request_id}; update merges brief fields; checkpoint {preview_request_id,label};
+    review {checkpoint_id,seen_sha256,improved:bool,assessment:{goal,protections,light_color,edges,remaining,reference?}};
+    feedback {kind:brightness|temperature|strength|subject|background|prefer_previous|custom,message,protect?:[...],checkpoint_id?};
+    accept {checkpoint_id,user_confirmation}; restore {checkpoint_id} WRITES saved selected-layer
+    color parameters through adjust, without restoring layer structure/mask pixels. Render/review again.
+    get/diagnose/compare are read-only; compare {roles:[initial,previous,current,accepted]} returns images.
+    Reference images and visual judgments are supplied by the vision client; the backend cannot prove aesthetics.
+    P1 reference_plan {checkpoint_id,targets:[{id,reference_id,observation,uncertainty,region,direction,
+      protect:[...],priority:1..5,limitation}]}; IDs reference the current brief, priority 1 is highest.
+    recognize {checkpoint_id,aspect,user_confirmation,supersedes?:[recognition_id]} records partial USER approval.
+    feedback may add interpretation:{problem,region,direction,method:global|color_range|local|inspect_only,risks}.
+    P1 checkpoints freeze intent. review additionally requires exact id/status/note lists for captured
+    target_results (pending|close|conflict|limited), protection_results (preserved|changed|uncertain),
+    feedback_results (resolved|improved|unchanged|worse|conflict). See checkpoint.intent for required IDs.
+    compare can alternatively use {checkpoint_ids:[...]} for up to three recognized historical versions.
+    anchor_analysis measures actual-render patches without writing C1. payload={checkpoint_id,reference_id,
+      reference_checkpoint_id OR reference_path+reference_sha256,assume_srgb?:{reference:bool,target:bool},
+      anchors:[{id,role,kind:neutral|color,reference_box:[l,t,r,b],target_box:[l,t,r,b]}]}.
+    Boxes use normalized EXIF-oriented preview coordinates, never RAW/mask coordinates. No automatic neutralization.
+    Reuse fixed anchors with {checkpoint_id,baseline_analysis_id,alignment_confirmed:true} after looking at the new render.
+    An embedded ICC is converted; untagged RGB requires explicit assume_srgb. Lab deltas are not C1 slider values.
+    reference_plan may link anchor_analysis_id from its current checkpoint. References must be explicitly provided images.
+    """
+    result = _call("operations", action=action, operation_id=operation_id, request_id=request_id,
+                   task_action=task_action, task_id=task_id, payload=payload,
+                   target=target, observation_token=observation_token)
+    if action == 'task' and task_action == 'compare':
+        return _task_comparison_content(result)
+    return result
+
+
+def _task_comparison_content(result):
+    """Deliver retained actual renders with checked provenance and labelled ordering."""
+    result = dict(result)
+    images, deliveries = [], []
+    archive = (state_directory() / 'task-previews').resolve()
+    for item in result.get('comparison', []):
+        try:
+            artifact = item['artifact']
+            path = Path(artifact['path'])
+            if path.is_symlink() or not path.resolve().is_relative_to(archive) or path.stat().st_size > 128 * 1024 * 1024:
+                raise ValueError('Retained preview is outside its private archive or exceeds the size limit')
+            data = path.read_bytes()
+            if hashlib.sha256(data).hexdigest() != artifact['image']['sha256']:
+                raise ValueError('Retained preview differs from checkpoint')
+            proxy, delivery = _analysis_proxy(data, artifact, archive)
+            images.append(TextContent(type='text', text=f"{item['role']}: {item['label']} ({item['checkpoint_id']})"))
+            images.append(Image(data=proxy, format='jpeg').to_image_content())
+            deliveries.append({'role': item['role'], 'status': 'available', **delivery})
+        except (OSError, KeyError, TypeError, ValueError) as error:
+            deliveries.append({'role': item.get('role'), 'status': 'unavailable', 'message': str(error)})
+    result['image_delivery'] = deliveries
+    return CallToolResult(content=[TextContent(type='text', text=json.dumps(result, ensure_ascii=False)), *images],
+                          structuredContent=result)
 
 
 def main():

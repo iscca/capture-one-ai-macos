@@ -96,6 +96,8 @@ def compact_response(response: dict, *, command: str | None = None,
     """Keep decision facts; operations/get is the explicit full-log escape hatch."""
     if command == "operations" and action in (None, "get"):
         return deepcopy(response)
+    if command == "operations" and action == "task":
+        return deepcopy(response)
     if command == "read":
         return {key: (deepcopy(value) if key in {"error", "errors", "target", "state"}
                      or key == "values" and "module" in response else _prune(value))

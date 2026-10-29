@@ -151,6 +151,12 @@ class MacOSBackend(MacTools):
             raise Refused("unsupported", "Unsupported Mac scalar fields")
         return self._observation(self._call("read", fields=fields))
 
+    def render_revision(self, target):
+        """Same script-exposed state fingerprint used around actual exports; no mask pixels."""
+        import hashlib
+        result = self._call("revision", expected=target)
+        return hashlib.sha256(result["revision"].encode()).hexdigest()
+
     def set_values(self, patch, observation):
         target = observation["target"]
         if not self._writable_session(target) or not self._candidate(target):

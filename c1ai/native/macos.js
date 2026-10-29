@@ -67,6 +67,10 @@ function run(argv) {
             return JSON.stringify({status:'ok',...after});
         }
         guard();
+        if(q.action==='revision'){
+            const revision=revisionState();guard();
+            return JSON.stringify({status:'ok',target:identity(),revision:revision});
+        }
         if(q.action==='inspect_export'){
             const v=a.primaryVariant(),paths=v.outputEvents.path(),dates=v.outputEvents.date();
             const index=paths.indexOf(q.path);

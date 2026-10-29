@@ -6,6 +6,9 @@
 
 ## 调色流程
 
+支持 `context.editing_tasks.available` 的开发版本先按 [摄影师任务](EDITING_TASKS.md)
+保存目标、保护项与参考用途，并保留每轮实际预览检查点。旧版本继续使用下列基础流程。
+
 1. `context` 确认宿主、目标、能力和未决操作；`read(fields=[])` 取得目标与观察凭据。
 2. 经用户明确授权临时 JPEG 导出后，用 `preview(kind=render)` 看实际 C1 渲染。
 3. 新方案创建一次 `images(action=create_candidate)` 并核对选中的候选；继续方案复用既有候选。

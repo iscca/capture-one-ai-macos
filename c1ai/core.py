@@ -18,6 +18,8 @@ class Core:
         self.backend = backend
         self.journal = Journal(state_dir)
         self._lock = threading.RLock()
+        from .editing_tasks import EditingTasks
+        self.tasks = EditingTasks(self)
 
     def dispatch(self, request):
         with self._lock:
@@ -30,6 +32,7 @@ class Core:
                 command = request["command"]
                 if command == "context":
                     context = self.backend.context()
+                    context["editing_tasks"] = self.tasks.summary(context)
                     if request.get("include_dialogs") is True:
                         native_windows = context.get("native_windows")
                         if isinstance(native_windows, dict) and (
@@ -53,6 +56,8 @@ class Core:
                     self._target(request.get("target"), observation["target"])
                     return dict(observation, status="ok", guidance=read_guidance(request,observation))
                 if command == "operations":
+                    if request.get("action") == "task":
+                        return self.tasks.dispatch(request)
                     return self._public_result(self._operations(request))
                 if command == "images" and request.get("action") == "list":
                     if (request.get('scope','filtered') not in {'filtered','all'}

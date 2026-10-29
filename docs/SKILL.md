@@ -14,6 +14,8 @@
 
 - `SKILL.md`：操作与审美判断流程、候选保护、停止和交付条件。
 - `references/usage.md`：独立安装所需链接、Mac 使用约定、六工具调用与模块约定。
+- `references/photographic-workflow.md`：P0 任务及 P1 参考特征、反馈解释、局部认可和逐项复核。
+- `references/detail-matching.md`：分影调灰度偏色、固定细节颜色对应、实际预览取样与复测边界。
 - `agents/openai.yaml`：技能名称和示例提示。
 - 独立 ZIP 附 MIT 许可证。
 

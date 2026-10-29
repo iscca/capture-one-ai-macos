@@ -11,6 +11,16 @@ MCP 与 CLI 共用六工具。MCP 调用省略 `command` 字段；Python `c1ai.c
 | preview | 显式授权后的 C1 临时 JPEG 渲染，kind=render |
 | operations | 用原 request_id 查询或只读核对结果 |
 
+Mac P0 新增 `operations(action=task,task_action=...)` 管理摄影师目标、参考图分析、
+真实预览检查点、比较、反馈和用户认可。`task_action=restore` 是显式参数写入，
+沿用现有 adjust 保护；`get/list/reconcile` 仍为原操作记录入口。详见 [修图任务](EDITING_TASKS.md)。
+
+P1 开发版本另含 `task_action=reference_plan|recognize`，feedback 支持 interpretation，
+review 按检查点 intent 增加逐项结果。六工具不变，详见 [P1 契约](P1_EDITING.md)。
+
+参考分析新增 `task_action=anchor_analysis`，读取实际预览的明度段、灰色偏色及固定细节颜色对应，
+只写本机任务记录；不会把测量值直接作为 C1 参数。见 [固定细节映射](REFERENCE_MATCHING.md)。
+
 ## 目标与写入
 
 所有修改绑定当前实例、文档、照片、变体及图层。先 read，将返回的 `target`、`observation_token` 原样传入 adjust，使用唯一 `request_id`。切图/层或前态变化后重新读取。未知或部分结果先查原编号，不重放。

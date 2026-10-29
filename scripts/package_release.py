@@ -23,6 +23,11 @@ PUBLIC_FILES = [
     'docs/SKILL.md', 'docs/RELEASE_0.3.0a1.md', 'docs/RELEASE_0.3.0a2.md',
     'skills/capture-one-edit/SKILL.md', 'skills/capture-one-edit/agents/openai.yaml',
     'skills/capture-one-edit/references/usage.md',
+    'skills/capture-one-edit/references/photographic-workflow.md',
+    'docs/EDITING_TASKS.md', 'docs/P0_VALIDATION.md',
+    'docs/P1_EDITING.md', 'docs/P1_VALIDATION.md',
+    'docs/REFERENCE_MATCHING.md',
+    'skills/capture-one-edit/references/detail-matching.md',
 ]
 
 
