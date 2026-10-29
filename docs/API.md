@@ -1,5 +1,7 @@
 # 接口说明
 
+本文中的原生预览、Skin、图层排序/复制及完整蒙版能力以 Windows 为基线。Mac 共用六工具，但必须读取当前 `context.capabilities`，其范围和差异见 [MACOS](MACOS.md)；不可由下面示例推定 Mac 支持。
+
 MCP 与 CLI 共用六个命令。MCP 省略 JSON 的 command 字段；Python c1ai.client.call 和 CLI request --file 使用完整 JSON。只写登记候选，不能伪造目标、凭据和图层引用。
 
 | 工具 | 用途和主要字段 |

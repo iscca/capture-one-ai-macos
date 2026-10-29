@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import sqlite3
+import sys
 import time
 import uuid
 
@@ -14,6 +15,9 @@ PENDING = {"dispatching", "partial", "outcome_unknown"}
 
 
 def default_state_dir():
+    if sys.platform == "darwin":
+        from .macos_ipc import state_directory
+        return state_directory()
     base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
     return base / "CaptureOneAI"
 
@@ -21,6 +25,8 @@ def default_state_dir():
 def scope(target):
     def path(part):
         value = (target or {}).get(part, {}).get("path")
+        if sys.platform == "darwin":
+            return os.path.normpath(str(value)) if value else None
         return str(value).replace("/", "\\").casefold() if value else None
     return path("document"), path("image")
 

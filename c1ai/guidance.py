@@ -26,6 +26,9 @@ def workflow():
 
 
 _MODULE_GUIDANCE = {
+    'film_grain': {'units': 'impact/granularity 0..100; native grain type enum',
+        'use_when': '用户要求胶片颗粒；只在背景层调整。',
+        'review': '查看原生导出的实际质感；低分辨率预览不能证明100%原尺寸颗粒外观。'},
     'white_balance': {
         'units': {'temperature': 'K', 'tint': 'C1色调数值'},
         'use_when': '有整体偏色或用户指定色温倾向；保留有意的环境光色，不强行把所有中性物体调成灰。',

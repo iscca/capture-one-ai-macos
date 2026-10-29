@@ -42,7 +42,7 @@ class Core:
                                 if native_windows.get("blocking_modal_possible") is True else "native_window_state_unavailable"}
                         else:
                             context["dialogs"] = self.backend.call("dialogs")
-                    return dict(context, status="ok", workflow=workflow(), pending_operations=self.journal.pending(context.get("target")))
+                    return dict(context, status="ok", workflow=context.get("workflow", workflow()), pending_operations=self.journal.pending(context.get("target")))
                 if command == "read":
                     if request.get("module") in STRUCTURED_MODULES:
                         if "fields" in request or "modules" in request:
@@ -152,7 +152,7 @@ class Core:
         if saved.get('navigation'):
             if request['command']!='images' or request.get('action')!='select':
                 raise Refused('navigation_only','A list token can select a photo; read the photo before editing')
-            current=self.backend.image_action('list',{'limit':1},None)['_navigation_observation']
+            current=self.backend.image_action('list',{'limit':1,'scope':saved.get('native_inventory_scope','filtered')},None)['_navigation_observation']
             self._target(request['target'],current['target'])
             if self.journal.observe(current)!=request['observation_token']:
                 raise Refused('stale_selection','Collection or selection changed after listing')
@@ -184,6 +184,9 @@ class Core:
         if existing:
             return dict(existing, replayed=False, existing=True)
         command = request["command"]
+        validate_backend = getattr(self.backend, "validate_request", None)
+        if callable(validate_backend):
+            validate_backend(request)
         if command == "images" and request.get("action") not in IMAGE_ACTIONS:
             raise Refused("unsupported", "Unsupported image action")
         if command == "images" and request.get("action") == "prepare_tool" and request.get("tool") not in STRUCTURED_MODULES:
@@ -228,7 +231,8 @@ class Core:
             if module_action:
                 from .native_modules import apply_module_action
                 source=self.journal.observation(patch['source_observation_token']) if patch['action']=='paste' else None
-                result=apply_module_action(self.backend,request['module'],patch,observation,source)
+                adapter_apply=getattr(self.backend,'apply_module_action',None)
+                result=adapter_apply(request['module'],patch,observation,source) if callable(adapter_apply) else apply_module_action(self.backend,request['module'],patch,observation,source)
                 after=result['after'];self._target(observation['target'],after['target'])
                 after['observation_token']=self.journal.observe(after)
                 return self.journal.update(operation_id,status='control_confirmed',after=after,result=result,model_verified=True)
@@ -484,6 +488,29 @@ class Core:
         if not same_scope(record.get("target"), result.get("target")):
             raise Refused("target_changed", "Reconciliation evidence belongs to another document/image")
         outcome = result.get("outcome")
+        if outcome == 'observed_deviation':
+            # A read-only receipt may describe a known host failure without certifying intent.
+            # Limit this case to a native move which removed exactly its requested source.
+            request=record.get('request',{})
+            observed=result['evidence'].get('observation',{})
+            old=record.get('before',{}).get('state',{}).get('layers',[])
+            state=observed.get('state',{})
+            removed=request.get('patch',{}).get('layer_ref')
+            if (request.get('command')!='adjust' or request.get('module')!='layers'
+                    or request.get('patch',{}).get('action')!='move'
+                    or not isinstance(removed,dict) or removed.get('is_image_layer') is not False
+                    or removed not in old or state.get('layers')!=[item for item in old if item!=removed]
+                    or observed.get('target')!=result['target']
+                    or result['evidence'].get('native_error_state_matches_current') is not True
+                    or result['evidence'].get('requested_result_verified') is not False):
+                raise Refused('invalid_evidence','Unknown structural deviations cannot be terminalized')
+            if any(record['target'].get(k)!=result['target'].get(k) for k in ('instance','document','image','variant')):
+                raise Refused('target_changed','Deviation evidence changed the photo identity')
+            selected=state.get('selected_layer')
+            if selected not in state['layers'] or not (result['target'].get('layer')==selected
+                    or selected['is_image_layer'] and result['target'].get('layer')=='Background'):
+                raise Refused('invalid_evidence','Deviation has inconsistent selected-layer identity')
+            return 'applied_not_restored'
         if outcome not in {"applied_not_restored", "not_applied", "restored", "partial", "unknown"}:
             raise Refused("invalid_evidence", "Unrecognized reconciliation outcome")
         if record.get("request", {}).get("module") in STRUCTURED_MODULES:
@@ -520,7 +547,7 @@ class Core:
                    "reconciled_action_count": len(record["actions"]), "reconciled_numeric_after": False,
                    "model_verified": False}
         if record.get("request", {}).get("module") in STRUCTURED_MODULES and outcome in {
-                "applied_not_restored", "partial", "not_applied"}:
+                "applied_not_restored", "partial", "not_applied", "observed_deviation"}:
             observed = result["evidence"]["observation"]
             changes["after"] = dict(observed, values={record["request"]["module"]: observed["state"]})
         if (not record.get("legacy") and record.get("request", {}).get("command") == "adjust"

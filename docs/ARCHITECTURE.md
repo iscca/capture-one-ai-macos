@@ -1,6 +1,8 @@
 # 当前执行架构
 
-唯一正常编辑通道：`CLI/MCP → Core → WindowsBackend.read_model/write_model → C1 内部管道 → UI 线程 → CoreVariant 正常 getter/setter`。
+平台入口 `client/owner` 在加载时选择 Windows 或 macOS。Mac 使用 `macos_ipc → 同一 Core → MacOSBackend/MacTools → Apple Events/JXA`，单用户私有 Unix socket 串行派发；预览为用户显式启用的临时 JPEG 导出。具体限制见 [MACOS](MACOS.md)。以下记录 Windows 实现。
+
+Windows 正常编辑通道：`CLI/MCP → Core → WindowsBackend.read_model/write_model → C1 内部管道 → UI 线程 → CoreVariant 正常 getter/setter`。
 
 活动调整层复用这一通道：背景使用变体 getter/setter；局部使用 CoreLocalAdjustmentsLayer 的泛型 GetValue/SetValue，保留 C1 的 Undo/通知机制。先由宿主 IsPropertyAvailable 检查图层支持；白平衡使用 WhiteBalanceHelper/WhiteBalanceConverter；混色器 AddCorrection 按当前层选择属性集。读写时仍校验同一 Mask.GUID，不因允许局部调整而放宽目标检查。
 

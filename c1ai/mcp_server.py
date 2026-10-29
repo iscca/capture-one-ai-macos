@@ -9,6 +9,7 @@ import hashlib
 import io
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Any, Literal
 
@@ -21,7 +22,10 @@ from .formatting import compact_response
 from .owner import state_directory
 from .guidance import MCP_INSTRUCTIONS
 
-mcp = FastMCP("Capture One AI", instructions=MCP_INSTRUCTIONS)
+platform_instructions = (" On macOS, editing is experimental and candidate-only. Check context capabilities. "
+                         "Use preview(kind='render') only after the user explicitly enables temporary JPEG exports. "
+                         "Structured color tools, film_grain and navigation are available according to context; native/mask previews are unavailable." if sys.platform == "darwin" else "")
+mcp = FastMCP("Capture One AI", instructions=MCP_INSTRUCTIONS + platform_instructions)
 
 
 def _call(command: str, **fields) -> dict[str, Any]:
@@ -52,6 +56,7 @@ def adjust(target: dict[str, Any], module: str,
            request_id: str | None = None) -> dict[str, Any]:
     """Apply one qualified numeric or structured module using its exact observed module token.
 
+    macOS film_grain {type?:fine|silver_rich|soft|cubic|tabular|harsh,impact?:0..100,granularity?:0..100}; Background-only.
     Structured modules: curves {channel,points:[[x,y],...]}; color_mixer
     {mode:'basic',color,hue?,saturation?,lightness?} or
     {mode:'advanced'|'skin',action:'add'|'update'|'remove',rgb? ,index?,hue?,saturation?,lightness?,smoothness?,uniformity_hue?,uniformity_saturation?,uniformity_lightness?,enabled?,inverted?};
@@ -96,11 +101,12 @@ def images(action: Literal["list", "create_candidate", "select", "next", "previo
            variant_id: StrictInt | None = None,
            variant_uuid: str | None = None, scope: Literal['filtered','all'] = 'filtered',
            offset: StrictInt = 0, limit: StrictInt = 200, collection_token: str | None = None,
-           tool: Literal["curves", "levels", "color_mixer", "color_balance", "layers", "masks"] | None = None) -> dict[str, Any]:
+           tool: Literal["curves", "levels", "color_mixer", "color_balance", "layers", "masks", "film_grain"] | None = None) -> dict[str, Any]:
     """List the active native collection (including offscreen photos), or select by variant_uuid.
 
     Follow next_offset with the same collection_token. next/previous follow the filtered collection.
     create_candidate clones the selected variant; edits remain restricted to registered copies.
+    macOS supports native collection listing and selection; consult context for platform restrictions.
     """
     return _call("images", action=action, target=target, observation_token=observation_token,
                  request_id=request_id, variant_id=variant_id, variant_uuid=variant_uuid, tool=tool,
@@ -115,7 +121,9 @@ def preview(target: dict[str, Any], observation_token: str,
             points: list[dict[str, float]] | None = None,
             direction: Literal['preview_to_raw','raw_to_preview'] = 'preview_to_raw',
             request_id: str | None = None) -> CallToolResult:
-    """Default native renders current C1 adjustments asynchronously, without export or focus.
+    """Check context capabilities first. macOS requires explicitly enabled kind=render JPEG exports.
+
+    On Windows, default native renders current C1 adjustments asynchronously, without export or focus.
 
     kind=mask renders the selected layer's whole composite mask. max_size is 128..1600.
     map_points maps {x,y} pixel-edge coordinates using C1's nonlinear transform; use the

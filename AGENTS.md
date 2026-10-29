@@ -13,7 +13,7 @@
 ## 当前基线
 
 - 已公开发布 0.2.0a1 / tag `v0.2.0-alpha.1`，实测 Windows + Capture One 16.8.6.3784 + Session。
-- **macOS 后端尚未实现或实机验证。** 迁移文档是开发交接，不是 Mac 使用说明。
+- 本分支已增加 macOS 实验后端；本机闭环和明确缺口见 [docs/MACOS.md](docs/MACOS.md)。曲线、色阶、Basic/Advanced、色轮、颗粒及受限图层/蒙版已接入；实测状态见 docs/MAC_VALIDATION.md，不能继承 Windows 能力。
 - 保留当前 Windows 功能，优先在同一项目中新增 Mac 平台实现，不重写全部系统。
 - 当前六个公共工具为 context、images、read、adjust、preview、operations；MCP 与 CLI 共用核心，不按 AI 厂商另建一套工具。
 - 从 GitHub 最新源码接续开发。现有 Release ZIP 是 Windows 交付快照，不能当作最新开发分支或 Mac 安装包。

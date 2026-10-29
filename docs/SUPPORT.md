@@ -1,4 +1,6 @@
-# 验证范围与限制
+# Windows 验证范围与限制
+
+Mac 实验实现单独见 [MACOS](MACOS.md) 和 [MAC_VALIDATION](MAC_VALIDATION.md)，不继承下列 Windows 结果。
 
 截至 2026-10-29，Windows / Capture One **16.8.6.3784** / 一个 Session，以真实 RAW 的登记候选变体进行读、写、回读和预览。本机结果不表示官方支持或所有照片、版本都通过。
 

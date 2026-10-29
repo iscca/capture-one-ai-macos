@@ -9,7 +9,7 @@ MODULES = {
     "hdr": ("highlight_recovery", "shadow_recovery", "white_recovery", "black_recovery"),
 }
 FIELDS = tuple(field for fields in MODULES.values() for field in fields)
-STRUCTURED_MODULES = {"curves", "levels", "color_mixer", "color_balance", "layers", "masks"}
+STRUCTURED_MODULES = {"curves", "levels", "color_mixer", "color_balance", "layers", "masks", "film_grain"}
 COMMANDS = {"context", "read", "adjust", "images", "preview", "operations"}
 IMAGE_ACTIONS = {"clone", "create_candidate", "select", "next", "previous", "prepare_adjustments", "prepare_tool"}
 
@@ -55,6 +55,14 @@ def validate_structured_patch(request):
                 or not math.isfinite(value) or not lower <= value <= upper):
             raise Refused("invalid_value", f"Expected a finite number between {lower} and {upper}")
 
+    if module == 'film_grain':
+        keys(set(), {'type','impact','granularity'})
+        if not patch:raise Refused('invalid_patch','Film grain requires at least one parameter')
+        if 'type' in patch and patch['type'] not in {'fine','silver_rich','soft','cubic','tabular','harsh'}:
+            raise Refused('invalid_patch','Unsupported native film grain type')
+        for field in ('impact','granularity'):
+            if field in patch:number(patch[field],0,100)
+        return patch
     if module == "levels":
         ranges={'input_black':(0,255),'input_white':(0,255),'midtone':(-1,1),'output_black':(0,255),'output_white':(0,255)}
         keys({'channel'},ranges)
@@ -138,11 +146,14 @@ def validate_structured_patch(request):
     else:
         action=patch.get('action')
         required={'create_subject':set(),'create_background':set(),'invert':set(),'clear':set(),
-            'fill':{'density'},'copy':{'source_layer'},'combine':{'source_layer','mode'},'feather':{'radius'},
+            'fill':{'density'},'copy':{'source_layer'},'combine':{'source_layer','mode'},'feather':set(),
             'linear_gradient':{'start','stop','midpoint'},'radial_gradient':{'center','radius_x','radius_y','falloff','angle','inverted'},
             'luma_range':{'shadow','shadow_falloff','highlight','highlight_falloff','radius','sensitivity','inverted'},'select_submask':{'index'}}
         if action not in required:raise Refused('invalid_patch','Unsupported native mask action')
-        keys({'action'}|required[action])
+        keys({'action'}|required[action], {'radius','native_amount'} if action=='feather' else ())
+        if action=='feather':
+            if ('radius' in patch)==('native_amount' in patch):raise Refused('invalid_patch','Feather requires exactly one of pixel radius or native_amount')
+            if 'native_amount' in patch:number(patch['native_amount'],0,100)
         if 'source_layer' in patch:layer_ref(patch['source_layer'])
         if action=='combine' and patch['mode'] not in {'add','subtract','intersect'}:raise Refused('invalid_patch','Use add/subtract/intersect')
         if 'radius' in patch:number(patch['radius'],0,300)
@@ -167,7 +178,7 @@ def validate_structured_patch(request):
 
 def validate_module_action(request):
     patch=request.get('patch',{});action=patch.get('action')
-    if request.get('module') not in set(MODULES)|{'curves','levels','color_mixer','color_balance'}:
+    if request.get('module') not in set(MODULES)|{'curves','levels','color_mixer','color_balance','film_grain'}:
         raise Refused('invalid_patch','Only color adjustment modules can be reset or pasted')
     expected={'action'} if action=='reset' else {'action','source_observation_token'}
     if action not in {'reset','paste'} or set(patch)!=expected:

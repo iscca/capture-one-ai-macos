@@ -12,6 +12,7 @@ from test_core import FakeBackend
 BACKGROUND = {"runtime_id": [42, 1], "name": "Background", "is_image_layer": True}
 LAYER = {"runtime_id": [42, 2], "name": "Adjustment 1", "is_image_layer": False}
 PATCHES = {
+    "film_grain": {"type": "fine", "impact": 25, "granularity": 50},
     "curves": {"channel": "rgb", "points": [[0, 0], [0.5, 0.6], [1, 1]]},
     "color_mixer": {"mode": "basic", "color": "red", "hue": 1},
     "color_balance": {"wheel": "shadows", "x": 2},

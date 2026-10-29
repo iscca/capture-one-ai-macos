@@ -16,7 +16,7 @@ import uuid
 import pytest
 
 from c1ai.client import RequestUncertain, send_request
-from c1ai.owner import (NamedPipeServer, OwnerAlreadyRunning, PROTOCOL,
+from c1ai.windows_owner import (NamedPipeServer, OwnerAlreadyRunning, PROTOCOL,
                        UserSecurity, connect_pipe, receive_frame, send_frame, win32)
 
 pytestmark = pytest.mark.skipif(os.name != "nt", reason="Real Windows named-pipe integration tests")

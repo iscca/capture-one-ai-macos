@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import uuid
 from .client import send_request
-from .owner import state_directory, win32
+from .windows_owner import state_directory, win32
 
 
 def call(request: dict, *, timeout: float = 35) -> dict:

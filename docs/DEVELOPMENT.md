@@ -19,3 +19,14 @@ MCP 和 CLI 共用 c1ai.client → owner → Core → WindowsBackend → interna
 Git 不追踪编译产物；Release 可附本项目 DLL，不包含 C1 厂商程序集。MIT 只覆盖本项目，第三方说明在根目录。
 
 必要发布检查为文件清单与敏感信息扫描、语法、干净目录安装、MCP 工具发现和只读预览、ZIP 哈希。分发检查不是全部调色功能重新验收，不虚构跨平台兼容性。
+
+## 0.3.0a1 Mac 与 skill 打包
+
+```sh
+.venv/bin/python scripts/package_release.py --target macos --output dist/0.3.0a1
+.venv/bin/python scripts/package_release.py --target skill --output dist/0.3.0a1
+```
+
+默认 `--target windows` 保留原打包选择；Mac/skill 包不附 Windows 编译 DLL。脚本拒绝覆盖同名 ZIP，历史发布不自动替换。Mac 包带完整项目源码和说明，skill 包只带独立技能及许可证；安装依赖与 C1 均由用户提供。隐私检查同时拒绝个人 home 绝对路径、私人配置名、符号链接和检测到的凭据，仍需人工检查新增文字。
+
+`check_release.py` 默认不导出，Mac 实时渲染检查仅在用户明确授权后加 `--require-live --allow-preview-export`；参数不改变本机配置。没有选中照片时跳过预览，不自动打开文档或选图。

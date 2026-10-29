@@ -1,12 +1,26 @@
-# Capture One AI Windows
+# Capture One AI · macOS Experimental
+
+本仓库派生自 [ggssghatsys-beep/capture-one-ai-windows](https://github.com/ggssghatsys-beep/capture-one-ai-windows)，保留上游 MIT 版权及 Windows 后端。Mac 和 skill 下载见 [本仓库预发布](https://github.com/iscca/capture-one-ai-macos/releases)。
+
+**0.3.0a1 新增 macOS 实验实现与可安装 skill**：已在 Capture One 16.8.6.25 验证基础调色、曲线/色阶、Basic/Advanced、色轮、颗粒、受限图层/蒙版和显式临时导出预览。功能尚未与 Windows 对齐，范围和安装见 [macOS 实验版](docs/MACOS.md)。下文原 Windows 支持声明保留。
 
 让视觉 AI 在 Windows 上读取和调整 Capture One，并取得 C1 实际渲染的预览。提供 **MCP stdio + JSON CLI**，不绑定 AI 厂商、账号或聊天客户端。
 
-**0.2.0a1 预览版，实测 Capture One 16.8.6.3784 / Windows / Session。** 使用 C1 内部托管对象和原生处理内核，不是官方公开稳定 SDK。其他 C1 版本、Catalog 和多照片批量任务尚未完成兼容验证；启动器拒绝未验证版本。
+**Windows 基线：0.2.0a1，实测 Capture One 16.8.6.3784 / Windows / Session。** 使用 C1 内部托管对象和原生处理内核，不是官方公开稳定 SDK。其他 C1 版本、Catalog 和多照片批量任务尚未完成兼容验证；启动器拒绝未验证版本。
 
 Native Capture One editing for Windows through MCP and a JSON CLI. Vision models plan edits; the local bridge executes them and returns real Capture One previews. Unofficial, version-specific, MIT-licensed.
 
-## 功能
+## 平台与 skill
+
+| 交付内容 | 范围 |
+|---|---|
+| Windows | 保留既有后端及已验证版本；本次未做 Windows 实机回归 |
+| macOS 实验版 | Apple Silicon / C1 16.8.6.25 / Session；[安装与限制](docs/MACOS.md) |
+| capture-one-edit skill | 视觉调色流程，依赖单独安装的本机 MCP/CLI；[安装说明](docs/SKILL.md) |
+
+本次提供分开的 Mac 源码包和 skill 包，见 [发布说明](docs/RELEASE_0.3.0a1.md)。skill 不内置模型密钥，也不携带照片或私人连接配置。
+
+## Windows 功能
 
 - 曝光、对比度、亮度、饱和度、白平衡、HDR。
 - RGB / R / G / B 色阶；RGB / R / G / B / Luma **五通道原生曲线**。
@@ -50,7 +64,7 @@ Native Capture One editing for Windows through MCP and a JSON CLI. Vision models
 
 ## 包内文档
 
-继续开发可直接克隆本仓库最新源码，先读 [开发 AI 入口](AGENTS.md)。计划开发 Mac 版时阅读 [macOS 开发交接](docs/MAC_PORT.md)；**这是迁移说明，当前版本仍只支持已验证的 Windows 环境**。
+继续开发可直接克隆本仓库最新源码，先读 [开发 AI 入口](AGENTS.md)。计划开发 Mac 版时阅读 [macOS 开发交接](docs/MAC_PORT.md)；正式支持基线仍为上述 Windows 环境，Mac 为独立标注范围的实验实现。
 
 | 文档 | 内容 |
 |---|---|
@@ -63,6 +77,9 @@ Native Capture One editing for Windows through MCP and a JSON CLI. Vision models
 | [ARCHITECTURE](docs/ARCHITECTURE.md) | 原生调用与原图保护 |
 | [DEVELOPMENT](docs/DEVELOPMENT.md) | 开发和发布包生成 |
 | [AGENTS](AGENTS.md) | 开发 AI 接手顺序、原生优先和原图保护原则 |
+| [SKILL](docs/SKILL.md) | skill 安装、依赖与使用 |
+| [MACOS](docs/MACOS.md) | Mac 安装、可用功能与限制 |
+| [MAC_VALIDATION](docs/MAC_VALIDATION.md) | Mac 实机验证范围与失败项 |
 | [MAC_PORT](docs/MAC_PORT.md) | Mac 迁移入口、可复用代码、已知缺口与验收顺序 |
 
 运行状态在当前用户 `%LOCALAPPDATA%\CaptureOneAI`，不进入仓库。分发包不含照片、预览、Session、私人配置、连接令牌或历史操作数据库。预览只保留最近 8 张缓存，不是永久成片导出。

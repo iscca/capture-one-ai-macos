@@ -4,11 +4,11 @@
 
 ## MCP
 
-运行 Install.ps1 后使用 `config/mcp-server.local.json`。[示意配置](../config/mcp-server.example.json) 中的目录需要替换为安装目录。不同客户端外层配置格式可能不同，核心字段为 command、args、env。
+按平台安装：Windows 使用 Install.ps1，Mac 使用 Install.command（见 [MACOS](MACOS.md)）。安装后使用 `config/mcp-server.local.json`。[示意配置](../config/mcp-server.example.json) 中的目录需要替换为安装目录。不同客户端外层配置格式可能不同，核心字段为 command、args、env。
 
 程序已安装到本地 Python 环境，可从其他工作目录启动，不依赖 cwd。六个工具为 context、images、read、adjust、preview、operations。视觉模型须收到 preview 的图片块；纯文本模型不能声称检查过画面。当前以标准 MCP SDK 客户端验证，没有逐个验收所有 AI 产品。
 
-若工具仍显示旧定义（如 preview 只有 viewer/render、images 没有 variant_uuid），刷新 MCP 连接。默认使用 kind=native，无需为刷新工具重启 C1 或降级为截图。
+若工具仍显示旧定义（如 preview 只有 viewer/render、images 没有 variant_uuid），刷新 MCP 连接。Windows 默认使用 kind=native；Mac 仅在用户授权临时导出后使用 kind=render。无需为刷新工具重启 C1 或降级为截图。
 
 ## 给 AI 的操作说明
 

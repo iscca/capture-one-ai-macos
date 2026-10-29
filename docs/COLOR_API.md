@@ -1,5 +1,7 @@
 # 色彩与色阶接口
 
+本文中的原生预览、Skin、图层排序/复制及完整蒙版能力以 Windows 为基线。Mac 共用六工具，但必须读取当前 `context.capabilities`，其范围和差异见 [MACOS](MACOS.md)；不可由下面示例推定 Mac 支持。
+
 所有调整先 `read(module)`，使用返回的 `target`、`observation_token` 和新 `request_id` 调用 `adjust`。只可写登记的测试副本；Background 和当前调整层共用同一接口。
 
 ## 色阶

@@ -101,6 +101,14 @@ class WindowsBackend:
         self.window = None
         self.action_hook = None
 
+    def validate_request(self, request):
+        if request.get('module',request.get('tool'))=='film_grain':
+            from .contracts import Refused
+            raise Refused('unsupported','Film grain is currently implemented by the macOS backend only')
+        if request.get('command')=='adjust' and request.get('module')=='masks' and 'native_amount' in request.get('patch',{}):
+            from .contracts import Refused
+            raise Refused('unsupported','native_amount is a macOS-only feather parameter; Windows uses pixel radius')
+
     def close(self): self.worker.close()
 
     def call(self, operation, **payload):
@@ -171,7 +179,7 @@ class WindowsBackend:
     def _model_call(self, request, observation=None):
         from .internal_transport import call
         from .client import RequestUncertain
-        from .owner import PipeError
+        from .windows_owner import PipeError
         instance=(observation['target']['instance'] if observation else self.window)
         payload={**request,'expected_instance':{k:instance[k] for k in ('pid','started_at')}}
         action_context=getattr(self,'action_context',None)

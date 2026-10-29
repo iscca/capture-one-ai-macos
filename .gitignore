@@ -13,7 +13,7 @@ internal/bin/
 config/mcp-server.json
 config/mcp-server.local.json
 config/config.local.json
-references/
+/references/
 docs/*.json
 docs/CLEANUP.md
 docs/VALIDATION.md
@@ -38,7 +38,17 @@ requirements-tested.txt
 *.tif
 *.jpg
 *.png
+*.jpeg
+*.webp
+*.heic
+*.mp4
+*.mov
+.DS_Store
 .env
 internal-token.txt
 candidates.json
 internal-engine.json
+macos-config.json
+macos-validation.json
+active-validation.json
+active-cinema-grade.json

@@ -25,7 +25,7 @@ import threading
 import time
 import xml.etree.ElementTree as ET
 
-from .owner import NamedPipeServer, state_directory, win32
+from .windows_owner import NamedPipeServer, state_directory, win32
 
 PORT = 64246
 MAX_FRAME = 1024 * 1024
