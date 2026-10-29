@@ -1,4 +1,4 @@
 interface:
-  display_name: "Capture One 修图"
+  display_name: "Capture One Mac 修图"
   short_description: "通过本机原生桥接完成 Capture One 调色、胶片风格和候选预览"
   default_prompt: "使用 $capture-one-edit 为 Capture One 当前选中的照片制作一个胶片调色候选版本，并检查实际预览。"

@@ -1,8 +1,8 @@
 # macOS 实验版
 
-已在 Capture One **16.8.6.25** 接入原生 Apple Events / JXA 调整。保留 Windows 后端及六个 MCP / CLI 工具；不写 Capture One 数据库或侧车文件，不使用界面辅助。
+已在 Capture One **16.8.6.25** 接入原生 Apple Events / JXA 调整。提供六个 MCP / CLI 工具；不写 Capture One 数据库或侧车文件，不使用界面辅助。
 
-最新实机结果、限制和失败项目见 [MAC_VALIDATION](MAC_VALIDATION.md)。Mac 功能仍为实验性，不能继承 Windows 的版本资格或性能声明。
+最新实机结果、限制和失败项目见 [MAC_VALIDATION](MAC_VALIDATION.md)。Mac 功能仍为实验性，版本资格和性能仅以 Mac 实测为准。
 
 ## 当前可用
 
@@ -53,7 +53,7 @@ result = call({
 print(result['status'])
 ```
 
-类型为 `fine / silver_rich / soft / cubic / tabular / harsh`；强度、大小 0..100，impact=0 关闭颗粒。支持 `reset` 和已读同模块快照的 `paste`。颗粒只允许背景层；Windows 后端尚未实现该模块。
+类型为 `fine / silver_rich / soft / cubic / tabular / harsh`；强度、大小 0..100，impact=0 关闭颗粒。支持 `reset` 和已读同模块快照的 `paste`。颗粒只允许背景层。
 
 ## 使用与保护
 

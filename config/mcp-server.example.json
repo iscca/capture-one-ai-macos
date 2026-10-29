@@ -1,9 +1,8 @@
 {
   "mcpServers": {
     "capture-one-ai": {
-      "command": "C:\\Tools\\capture-one-ai-windows\\.venv\\Scripts\\python.exe",
-      "args": ["-m", "c1ai", "mcp"],
-      "env": {"PYTHONUTF8": "1", "PYTHONUNBUFFERED": "1"}
+      "command": "/path/to/capture-one-ai-macos/.venv/bin/python",
+      "args": ["-m", "c1ai", "mcp"]
     }
   }
 }

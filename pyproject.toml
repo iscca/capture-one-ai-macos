@@ -3,9 +3,9 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "capture-one-ai-rebuild"
-version = "0.3.0a1"
-description = "Capture One CLI/MCP with Windows editing and experimental macOS Apple Events support"
+name = "capture-one-ai-macos"
+version = "0.3.0a2"
+description = "Native Capture One editing on macOS via MCP and CLI"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -28,7 +28,7 @@ packages = ["c1ai"]
 include-package-data = true
 
 [tool.setuptools.package-data]
-c1ai = ["*.ps1", "native/*.ps1", "native/*.js", "data/*.json"]
+c1ai = ["native/*.js", "data/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

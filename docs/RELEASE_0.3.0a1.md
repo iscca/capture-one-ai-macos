@@ -1,6 +1,6 @@
 # 0.3.0a1 / v0.3.0-alpha.1
 
-本次为 **Mac 实验性预发布**，新增可独立安装的 `capture-one-edit` skill；Windows 保留原有实现与 0.2.0a1 验证基线。本次没有 Windows 实机回归，不替换原 Windows 发布包。
+本次为 **Mac 实验性预发布**，新增可独立安装的 `capture-one-edit` skill。后续说明整理见 [0.3.0a2](RELEASE_0.3.0a2.md)。
 
 ## 变化
 

@@ -12,16 +12,15 @@
 
 ## 当前基线
 
-- 已公开发布 0.2.0a1 / tag `v0.2.0-alpha.1`，实测 Windows + Capture One 16.8.6.3784 + Session。
-- 本分支已增加 macOS 实验后端；本机闭环和明确缺口见 [docs/MACOS.md](docs/MACOS.md)。曲线、色阶、Basic/Advanced、色轮、颗粒及受限图层/蒙版已接入；实测状态见 docs/MAC_VALIDATION.md，不能继承 Windows 能力。
-- 保留当前 Windows 功能，优先在同一项目中新增 Mac 平台实现，不重写全部系统。
-- 当前六个公共工具为 context、images、read、adjust、preview、operations；MCP 与 CLI 共用核心，不按 AI 厂商另建一套工具。
-- 从 GitHub 最新源码接续开发。现有 Release ZIP 是 Windows 交付快照，不能当作最新开发分支或 Mac 安装包。
+- 本仓库发布 Mac 版，用户说明、安装入口、skill 和发布内容以 macOS 为准。
+- 实测 Apple Silicon / Capture One 16.8.6.25 / Session。Mac 原生后端与具体限制见 docs/MACOS.md、docs/MAC_VALIDATION.md。
+- 六个公共工具为 context、images、read、adjust、preview、operations；MCP 与 CLI 共用核心。
+- 仅为说明整理不重写运行逻辑或删除仍被引用的共享实现。源代码沿用部分的版权声明保留在 THIRD_PARTY_NOTICES.md 和 LICENSE。
 
 ## 实现原则
 
 - **读和写都优先找原生接口。** 先核对宿主脚本字典、公开自动化接口、现有原生对象；UIA/Accessibility 覆盖不足不等于没有原生能力。
-- macOS 优先 Apple Events / AppleScript / JXA，Windows 保留当前内部托管对象路线。明确区分官方接口、内部接口、持久化参数和 UI 兼容入口。
+- macOS 优先 Apple Events / AppleScript / JXA。明确区分官方接口、内部接口、持久化参数和 UI 兼容入口。
 - 所有模块保持 read → adjust → 回读 → 实际预览，参数是绝对目标值。全局与局部尽量共用同一请求格式。
 - 默认后台执行、少抢焦点；不自动降级为预设导入、截图识色或键鼠。确有卡住／弹窗问题时，依据用户授权处理具体问题并记录使用了 UI 辅助。
 - 保持六工具和现有字段语义；不同平台的单位在适配层转换，不能为了通过接口把未验证能力标成可用。
@@ -41,7 +40,7 @@
 - 按改动做最小有意义验证。文档只检查链接／清单；新模块做代表性真实读写、回读、预览，必要时复测具体失败。不要默认全面穷举。
 - 没有运行目标平台或看到预览，就明确写未验证；不以 mock、返回 success 或相机内嵌 JPEG 证明 C1 修改后的画面正确。
 - 保持范围：用户已选定 Session／照片集合，默认不切文档、不导出。清晰度、锐化、降噪、镜头／几何和人像精修不自动纳入。
-- 交付说明写清修改、实际运行的检查、尚未通过的功能和下一步；不要因新增迁移文档就更改 README 的 Windows-only 支持声明。
+- 交付说明写清修改、实际运行的检查、尚未通过的功能和下一步。
 
 ## 仓库与发布
 

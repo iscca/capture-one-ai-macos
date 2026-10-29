@@ -20,7 +20,7 @@ PUBLIC_FILES = [
     'scripts/check_connection.py', 'scripts/configure.py', 'scripts/package_release.py',
     'scripts/check_release.py', 'Install.command', 'Run.command', 'scripts/configure_macos.py',
     'scripts/confirm_macos_candidate.py', 'docs/MACOS.md', 'docs/MAC_VALIDATION.md',
-    'docs/SKILL.md', 'docs/RELEASE_0.3.0a1.md',
+    'docs/SKILL.md', 'docs/RELEASE_0.3.0a1.md', 'docs/RELEASE_0.3.0a2.md',
     'skills/capture-one-edit/SKILL.md', 'skills/capture-one-edit/agents/openai.yaml',
     'skills/capture-one-edit/references/usage.md',
 ]
@@ -55,7 +55,7 @@ def privacy_check(paths):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--target', choices=['windows', 'macos', 'skill'], default='windows')
+    parser.add_argument('--target', choices=['windows', 'macos', 'skill'], default='macos')
     parser.add_argument('--output', type=Path, default=ROOT / 'dist', help='Directory for this release archives and checksums')
     args = parser.parse_args()
     version = tomllib.loads((ROOT / 'pyproject.toml').read_text('utf-8'))['project']['version']
@@ -63,6 +63,9 @@ def main():
             'skill': 'capture-one-edit-'}[args.target] + version
     paths = public_files()
     skill_root = ROOT / 'skills/capture-one-edit'
+    if args.target == 'macos':
+        paths = [p for p in paths if p.suffix != '.ps1' and 'internal' not in p.relative_to(ROOT).parts
+                 and p.relative_to(ROOT).as_posix() not in {'config/native-profile.json', 'scripts/configure.py', 'scripts/check_connection.py'}]
     if args.target == 'skill':
         paths = [p for p in paths if skill_root in p.parents] + [ROOT / 'LICENSE']
     privacy_check(paths)
@@ -78,7 +81,7 @@ def main():
             return 'LICENSE' if path.name == 'LICENSE' else path.relative_to(skill_root).as_posix()
         return path.relative_to(ROOT).as_posix()
     manifest = {'version': version, 'target': args.target,
-                'capture_one_versions': {'windows_baseline': '16.8.6.3784', 'macos_experimental': '16.8.6.25'},
+                'capture_one_versions': {'macos_experimental': '16.8.6.25'} if args.target != 'windows' else {'qualified': '16.8.6.3784'},
                 'compiled_bridge_included': len(binaries) == 2,
                 'own_bridge_assemblies': binaries,
                 'files': {relative(p): hashlib.sha256(p.read_bytes()).hexdigest()

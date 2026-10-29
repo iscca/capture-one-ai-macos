@@ -4,7 +4,7 @@
 
 ## 安装
 
-1. 按平台安装本项目：[Windows](INSTALL.md) 或 [macOS 实验版](MACOS.md)。将安装器生成的本机 MCP 配置接入支持视觉与图片块的客户端。
+1. 安装本项目：[Mac 版](INSTALL.md)。将安装器生成的本机 MCP 配置接入支持视觉与图片块的客户端。
 2. 将仓库 `skills/capture-one-edit` 文件夹，或独立 skill ZIP 中同名文件夹，复制到客户端的技能目录。Codex 通常为 `~/.codex/skills/capture-one-edit`；使用其他客户端时遵循其 skill 目录约定。无需复制整个仓库到技能目录。
 3. 刷新客户端技能与 MCP 连接。使用 `$capture-one-edit`，例如：“为当前选中的照片制作一个电影胶片候选版本，先说明方向，再调整并查看预览。”
 
@@ -13,7 +13,7 @@
 ## 包含内容
 
 - `SKILL.md`：操作与审美判断流程、候选保护、停止和交付条件。
-- `references/usage.md`：独立安装所需链接、平台差异、六工具调用与模块约定。
+- `references/usage.md`：独立安装所需链接、Mac 使用约定、六工具调用与模块约定。
 - `agents/openai.yaml`：技能名称和示例提示。
 - 独立 ZIP 附 MIT 许可证。
 

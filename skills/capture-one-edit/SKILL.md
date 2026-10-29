@@ -1,9 +1,9 @@
 ---
 name: capture-one-edit
-description: Read and grade photos in the user's open Capture One Session through the local Capture One AI MCP or CLI. Use for reference color matching, film and cinematic looks, and native adjustment or mask work; requires the installed local bridge and a vision-capable client.
+description: Read and grade photos in the user's open Capture One Session on macOS through the local Capture One AI MCP or CLI. Use for reference color matching, film and cinematic looks, and native adjustment or mask work; requires the installed local bridge and a vision-capable client.
 ---
 
-# Capture One editing
+# Capture One editing on Mac
 
 Edit the photo selected in Capture One, preserving the source and judging changes from actual Capture One renders. This skill supplies editing judgment and workflow; the separately installed local bridge executes requests. It does not install Capture One, grant permissions, or connect a remote photo service.
 
@@ -11,9 +11,8 @@ Edit the photo selected in Capture One, preserving the source and judging change
 
 Use the connected Capture One AI MCP tools when available: `context`, `images`, `read`, `adjust`, `preview`, `operations`. Otherwise use the installed `c1ai` CLI or the configured bridge Python environment; read [references/usage.md](references/usage.md) for examples. If the bridge is absent, explain the installation requirement using that reference. Do not guess machine paths or install from an unrelated repository.
 
-Start with `context`, inspect platform capabilities, selected document/photo/layer, and pending operations. Read the target and view a current render before grading. Capabilities and the installed host version take precedence over this skill's examples. Do not inherit Windows capabilities on macOS.
+Start with `context`, inspect platform capabilities, selected document/photo/layer, and pending operations. Read the target and view a current render before grading. Capabilities and the installed host version take precedence over this skill's examples.
 
-- Windows: qualified builds use `preview(kind=native)` without export.
 - macOS: `preview(kind=render)` requires the user's explicit permission for temporary low-resolution JPEG export and corresponding local configuration. If already authorized for this session, continue without asking again. No verified native/no-export or grayscale-mask preview exists on Mac.
 
 Stay within the user's selected Session and photo. Do not switch documents or start batch work without that scope. When the request is a new alternative, create one candidate with `images(action=create_candidate)`, verify the new target, and reuse it throughout the grade. For a continuing edit, reuse the intended registered candidate. Do not modify the original, borrow private candidate registries, or edit databases/sidecars.

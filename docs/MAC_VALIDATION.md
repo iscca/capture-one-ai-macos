@@ -49,6 +49,5 @@
 - 之前对原仓库 core/structured_core/formatting 的选择性检查存在 43 个旧失败，未改动 HEAD 上结果相同，主要涉及已退役接口等历史契约；没有为这次颗粒接入重写这批旧测试。
 - 收尾逐项核对八个模块快照，验证副本已恢复，仅剩背景层，没有待核对操作；已切回原 Portra 变体并确认其八模块参数保持一致。恢复前后 1600px JPEG 的平均绝对通道差小于 0.014，未宣称最终导出逐像素完全相同。
 - 最终通过实际 MCP stdio 连接列出六工具、读取原生颗粒参数，并收到一次真实 C1 渲染的图片块。
-- 未运行 Windows 实机回归；新颗粒模块在 Windows 后端明确拒绝，不据此声称 Windows 新增颗粒支持。
 
 颗粒背景层限制与缩图观察边界也见 [Capture One 官方颗粒说明](https://support.captureone.com/hc/en-us/articles/360002616398-The-Film-Grain-tool-overview) 与 [官方颗粒与输出尺寸说明](https://www.captureone.com/blog/film-grains-photorealistic-right-way)。

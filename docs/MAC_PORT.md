@@ -6,7 +6,6 @@
 
 `MCP/CLI → client/owner 平台入口 → macos_ipc → Core → MacOSBackend/MacTools → native/macos.js + macos_tools.js → Capture One Apple Events/JXA`。
 
-Windows 路线在 `windows_client/windows_owner/WindowsBackend` 保留。不要为不同 AI 客户端另建执行器。Mac 单用户私有 socket、状态目录、串行派发和持久收据与 Core 共用目标/前态保护。原生调用基于已安装宿主的脚本字典，升级必须核对字段、类型、单位、可写性与命令语义。
 
 ## 当前限制与下一步
 
@@ -22,5 +21,3 @@ Windows 路线在 `windows_client/windows_owner/WindowsBackend` 保留。不要�
 
 - [Capture One 官方自动化说明](https://support.captureone.com/hc/en-us/articles/360002681418-Capture-One-Workflow-Automation-with-AppleScript)：核对官方接口后仍以本机脚本字典为准。
 - [c1cmd](https://github.com/kiri11/c1cmd)：第三方实现，仅作为研究入口；其兼容与实测声明不继承到本项目，复用代码前固定提交并核对许可证。
-
-安装/发布检查与运行测试分开，保留 Windows 支持声明与单独的 Mac 实验资格。公共材料只写通用结论，原照片、路径、操作日志与参数快照保留在本机。
